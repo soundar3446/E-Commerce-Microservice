@@ -5,10 +5,10 @@
 
     public class InventoryMapper {
         public static InventoryDTO toDTO(Inventory inv) {
-            return new InventoryDTO(inv.getId(), inv.getProductId(), inv.getQuantity());
+            return new InventoryDTO(inv.getId(),  inv.getQuantity(), inv.getProductCode());
         }
 
         public static Inventory toEntity(InventoryDTO dto) {
-            return new Inventory(dto.getId(), dto.getProductId(), dto.getQuantity());
+            return new Inventory(dto.getId(),  dto.getQuantity(), dto.getProductCode());
         }
     }

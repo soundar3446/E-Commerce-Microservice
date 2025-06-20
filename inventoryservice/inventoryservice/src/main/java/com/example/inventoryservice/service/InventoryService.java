@@ -23,8 +23,8 @@ public class InventoryService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<InventoryDTO> getByProductId(Long productId) {
-        return repository.findByProductId(productId)
+    public Optional<InventoryDTO> getByProductCode(String productCode) {
+        return repository.findByProductCode(productCode)
                 .map(InventoryMapper::toDTO);
     }
 
@@ -36,7 +36,6 @@ public class InventoryService {
     public Optional<InventoryDTO> update(Long id, InventoryDTO dto) {
         return repository.findById(id)
                 .map(inv -> {
-                    inv.setProductId(dto.getProductId());
                     inv.setQuantity(dto.getQuantity());
                     return InventoryMapper.toDTO(repository.save(inv));
                 });

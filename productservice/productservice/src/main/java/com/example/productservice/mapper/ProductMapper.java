@@ -5,10 +5,10 @@ import com.example.productservice.model.Product;
 
 public class ProductMapper {
     public static ProductDTO toDTO(Product product) {
-        return new ProductDTO(product.getId(), product.getName(), product.getPrice());
+        return new ProductDTO(product.getId(), product.getName(), product.getPrice(), product.getProductCode());
     }
 
     public static Product toEntity(ProductDTO dto) {
-        return new Product(dto.getId(), dto.getName(), dto.getPrice());
+        return new Product(dto.getId(), dto.getName(), dto.getPrice(), dto.getProductCode());
     }
 }

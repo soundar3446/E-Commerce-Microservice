@@ -12,24 +12,24 @@ public class Inventory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long productId;
-
     private Integer quantity;
+
+    private String productCode;
 
     public Inventory() {}
 
-    public Inventory(Long id, Long productId, Integer quantity) {
+    public Inventory(Long id, Integer quantity, String productCode) {
         this.id = id;
-        this.productId = productId;
         this.quantity = quantity;
+        this.productCode = productCode;
     }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Long getProductId() { return productId; }
-    public void setProductId(Long productId) { this.productId = productId; }
-
     public Integer getQuantity() { return quantity; }
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
+
+    public String getProductCode() {return productCode;}
+    public void setProductCode(String productCode) {this.productCode = productCode;}
 }

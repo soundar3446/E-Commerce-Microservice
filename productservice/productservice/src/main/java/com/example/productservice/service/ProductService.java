@@ -33,7 +33,7 @@ public class ProductService {
     }
 
    public ProductDTO create(ProductDTO dto) {
-    String url = "http://localhost:8080/api/inventory/product/" + dto.getId();
+    String url = "http://localhost:8080/api/inventory/product/" + dto.getProductCode();
 
     try {
         InventoryDTO inventory = restTemplate.getForObject(url, InventoryDTO.class);
@@ -42,11 +42,11 @@ public class ProductService {
             Product product = repository.save(ProductMapper.toEntity(dto));
             return ProductMapper.toDTO(product);
         } else {
-            throw new RuntimeException("Product not in stock with ID: " + dto.getId());
+            throw new RuntimeException("Product not in stock with ID: " + dto.getProductCode());
         }
 
     } catch (HttpClientErrorException.NotFound e) {
-        throw new RuntimeException("Inventory record not found for product ID: " + dto.getId());
+        throw new RuntimeException("Inventory record not found for product ID: " + dto.getProductCode());
     } catch (RuntimeException e) {
         throw new RuntimeException("Inventory check failed: " + e.getMessage());
     }

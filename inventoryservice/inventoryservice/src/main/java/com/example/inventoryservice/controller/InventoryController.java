@@ -30,9 +30,9 @@ public class InventoryController {
         return service.getAll();
     }
 
-    @GetMapping("/product/{productId}")
-    public ResponseEntity<InventoryDTO> getByProductId(@PathVariable Long productId) {
-        return service.getByProductId(productId)
+    @GetMapping("/product/{productCode}")
+    public ResponseEntity<InventoryDTO> getByProductCode(@PathVariable String productCode) {
+        return service.getByProductCode(productCode)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
