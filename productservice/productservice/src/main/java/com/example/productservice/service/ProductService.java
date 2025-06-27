@@ -3,6 +3,7 @@ package com.example.productservice.service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import com.example.productservice.client.InventoryServiceClient;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,13 @@ import com.example.productservice.model.Product;
 import com.example.productservice.repository.ProductRepository;
 import com.example.productservice.dto.InventoryDTO;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker; 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+
 @Service
 public class ProductService {
 
@@ -22,7 +30,9 @@ public class ProductService {
     private ProductRepository repository;
 
     @Autowired
-    private RestTemplate restTemplate;
+    private InventoryServiceClient inventoryserviceclient;
+
+    private static final Logger log = LoggerFactory.getLogger(ProductService.class);
 
     public List<ProductDTO> getAll() {
         return repository.findAll().stream().map(ProductMapper::toDTO).collect(Collectors.toList());
@@ -33,11 +43,10 @@ public class ProductService {
     }
 
    public ProductDTO create(ProductDTO dto) {
-    String url = "http://localhost:8080/api/inventory/product/" + dto.getProductCode();
+    log.info("checking availability for product code {} ", dto.getProductCode());
+    InventoryDTO inventory = inventoryserviceclient.getInventoryByProductCode(dto.getProductCode());
 
     try {
-        InventoryDTO inventory = restTemplate.getForObject(url, InventoryDTO.class);
-
         if (inventory != null && inventory.getQuantity() > 0) {
             Product product = repository.save(ProductMapper.toEntity(dto));
             return ProductMapper.toDTO(product);
@@ -52,6 +61,10 @@ public class ProductService {
     }
 }
 
+    public ProductDTO createProductFallback (ProductDTO dto , Throwable t ){
+        log.info("Inventory service is down. Fallback executed for product code {}. Error {}.",dto.getProductCode() , t.getMessage());
+        throw new RuntimeException("Inventory service is currently available , please try again later");
+    }
 
     public Optional<ProductDTO> update(Long id, ProductDTO dto) {
         return repository.findById(id).map(p -> {
