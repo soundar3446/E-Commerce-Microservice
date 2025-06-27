@@ -30,25 +30,24 @@ This project simulates a basic e-commerce backend with separate services for man
 
 ---
 
-
 ## 🧱 Architecture Diagram
 
 ```mermaid
 graph TD
     subgraph "External World"
-        Client[Client / Browser]
+        Client["Client / Browser"]
     end
 
     subgraph "Microservices Ecosystem"
-        Client -- "HTTP Request" --> APIGateway[API Gateway\n:8079]
+        Client -- "HTTP Request" --> APIGateway["API Gateway :8079"]
 
         subgraph "Infrastructure Services"
-            DiscoveryServer[Discovery Server\n(Eureka)\n:8761]
+            DiscoveryServer["Discovery Server (Eureka):8761"]
         end
 
         subgraph "Business Services"
-            ProductService[Product Service\n:8081]
-            InventoryService[Inventory Service\n:8082]
+            ProductService["Product Service :8081"]
+            InventoryService["Inventory Service :8082"]
         end
 
         APIGateway -- "Routes to" --> ProductService
@@ -60,9 +59,10 @@ graph TD
 
         ProductService -- "Feign Client" --> InventoryService
 
-        ProductService -- "JPA" --> ProductDB[(PostgreSQL\nproducts)]
-        InventoryService -- "JPA" --> InventoryDB[(PostgreSQL\ninventory)]
+        ProductService --> ProductDB["PostgreSQL: products"]
+        InventoryService --> InventoryDB["PostgreSQL: inventory"]
     end
+
 
 ```
 
