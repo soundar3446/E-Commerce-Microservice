@@ -1,28 +1,30 @@
-# Server Configuration
-server.port=8080
+# Port for the API Gateway
+server:
+  port: 8079
 
-# Application Name
-spring.application.name=api-gateway
+# Unique application name for Eureka registration
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      # Enable discovering services from Eureka
+      discovery:
+        locator:
+          enabled: true
+      # Define the routes
+      routes:
+        - id: product-service-route
+          uri: lb://product-service     ]
+          predicates:
+            - Path=/api/products/**
+        - id: inventory-service-route
+          uri: lb://inventory-service  
+          predicates:
+            - Path=/api/inventory/**
 
-# --- Gateway Configuration ---
 
-# Enable discovery client integration (locates services via Eureka)
-spring.cloud.gateway.discovery.locator.enabled=true
-
-# --- Route Definitions ---
-
-# Route 1: Product Service
-# This corresponds to the first item in the YAML list (index 0)
-spring.cloud.gateway.routes[0].id=product-service-route
-spring.cloud.gateway.routes[0].uri=lb://productservice
-spring.cloud.gateway.routes[0].predicates[0]=Path=/api/products/**
-
-# Route 2: Inventory Service
-# This corresponds to the second item in the YAML list (index 1)
-spring.cloud.gateway.routes[1].id=inventory-service-route
-spring.cloud.gateway.routes[1].uri=lb://inventoryservice
-spring.cloud.gateway.routes[1].predicates[0]=Path=/api/inventory/**
-
-# --- Eureka Client Configuration ---
-# Point gateway to the Eureka server
-eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
