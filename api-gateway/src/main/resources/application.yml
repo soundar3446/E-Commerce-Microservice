@@ -15,7 +15,7 @@ spring:
       # Define the routes
       routes:
         - id: product-service-route
-          uri: lb://product-service     ]
+          uri: lb://product-service     
           predicates:
             - Path=/api/products/**
         - id: inventory-service-route
